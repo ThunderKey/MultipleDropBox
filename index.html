@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Example for MultipleDropBox</title>
+    
+    <style>
+      .dropbox {
+        background-color: #CCC;
+        padding: 15px;
+        margin: 5px;
+        border: 1px black solid;
+      }
+      
+      .dragItem {
+        border: 1px black solid;
+        margin: 5px;
+        padding: 5px;
+        cursor: move;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dropboxAlert" class="dropbox">Drag the items into this box to show the classes in an alert</div>
+    <div id="dropboxImportant" class="dropbox">Drag the important items into this box to show all classes in an alert</div>
+    <div class="dragItem important">Item one (classes: dragItem, important)</div>
+    <div class="dragItem">Item two (classes: dragItem)</div>
+    <button id="changeConfig">Change from alert confirm</button>
+    <button id="removeFunctionality">Remove all functionalities</button>
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="jquery.multipleDropBox.js"></script>
+    <script>
+      $("#dropboxAlert").multipleDropBox('.dragItem', {
+        onDrop: function(data) {
+          alert(data);
+        },
+        onDrag: function(event, element) {
+          // the returned element will be passed to the onDrop as the data object
+          return element.className;
+        }
+      });
+      
+      $("#dropboxImportant").multipleDropBox('.dragItem.important', {
+        onDrop: function(data) {
+          alert(data);
+        },
+        onDrag: function(event, element) {
+          // the returned element will be passed to the onDrop as the data object
+          return element.innerHTML;
+        },
+        onWrongElement: function(event) {
+          alert("You dragged a wrong element. Please just use the important ones.");
+        }
+      });
+      
+      $("#changeConfig").on('click', function() {
+        $("#dropboxAlert").data('DropboxConfig').onDrop = function(data) {
+          confirm(data);
+        };
+        $("#dropboxImportant").data('DropboxConfig').onDrop = function(data) {
+          confirm(data);
+        };
+      });
+      
+      $("#removeFunctionality").on('click', function() {
+        $("#dropboxAlert").multipleDropBoxOff();
+        $("#dropboxImportant").multipleDropBoxOff();
+      });
+    </script>
+  </body>
+</html>
